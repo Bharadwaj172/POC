@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvImageSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:background="#AA000000"
+        android:textColor="#FFFFFF"
+        android:text="Image size: 0 x 0"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvFileSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvImageSize"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:background="#AA000000"
+        android:textColor="#FFFFFF"
+        android:text="File Size: 0 KB"
+        android:visibility="visible"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tvFileSize"
+        android:scaleType="fitCenter"/>
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:weightSum="3"
+        android:background="#AA000000">
+
+        <Button
+            android:id="@+id/btnResize"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Resize"/>
+
+        <Button
+            android:id="@+id/btnCrop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Crop"/>
+
+        <Button
+            android:id="@+id/btnFlipRotate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Flip Rotate"/>
+    </LinearLayout>
+</RelativeLayout>

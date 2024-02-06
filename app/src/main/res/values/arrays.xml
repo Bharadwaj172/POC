@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string-array name="unit_options">
+            <item>Pixel</item>
+            <item>inch</item>
+            <item>Centimeter</item>
+            <item>Millimeter</item>
+            <!-- Add more units as needed -->
+        </string-array>
+
+</resources>
