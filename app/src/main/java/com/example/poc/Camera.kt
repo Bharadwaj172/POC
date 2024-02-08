@@ -1,5 +1,6 @@
 package com.example.poc
 
+
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -49,6 +50,15 @@ class CameraActivity : AppCompatActivity() {
         // Retrieve image URI from intent
         capturedImageUri = Uri.parse(intent.getStringExtra("ImageUri"))
 
+//        val intentToPercentage = Intent(this, PercentageActivity::class.java).apply {
+//            putExtra(
+//                "ImageUri",
+//                capturedImageUri.toString()
+//            ) // Ensure capturedImageUri is not null and has a value
+//        }
+
+//        startActivity(intentToPercentage)
+
 //        val intentToResize = Intent(this, ResizeActivity::class.java).apply {
 //            putExtra(
 //                "ImageUri",
@@ -59,22 +69,17 @@ class CameraActivity : AppCompatActivity() {
 //        startActivity(intentToResize)
 
 
-
-        val intentToPercentage = Intent(this, PercentageActivity::class.java).apply {
-            putExtra(
-                "ImageUri",
-                capturedImageUri.toString()
-            ) // Ensure capturedImageUri is not null and has a value
-        }
-
-        startActivity(intentToPercentage)
-
-
         if (capturedImageUri != null) {
 // Display the image in ImageView
             binding.imageView.setImageURI(capturedImageUri)
             binding.imageView.visibility = View.VISIBLE
 
+            val btnSend: Button = findViewById(R.id.btn)
+            btnSend.setOnClickListener {
+                // Intent to navigate to EmailActivity
+                val emailIntent = Intent(this, EmailActivity::class.java)
+                startActivity(emailIntent)
+            }
 
 
             val imageSize = getImageSize(capturedImageUri)
@@ -90,6 +95,8 @@ class CameraActivity : AppCompatActivity() {
         }
         setupButtons()
     }
+
+
 
 
     private fun getFileSize(uri: Uri): String {
@@ -119,11 +126,6 @@ class CameraActivity : AppCompatActivity() {
         }
 
     }
-
-
-
-
-
 
 
     private fun setupButtons() {
@@ -163,7 +165,7 @@ class CameraActivity : AppCompatActivity() {
                 putExtra("sourceUri", capturedImageUri)
             }
             startActivityForResult(cropIntent, UCrop.REQUEST_CROP)
-          }
+        }
 
     }
 
@@ -187,22 +189,16 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        
-
-        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK && data != null) {
-            val resultUri = UCrop.getOutput(data)
-            imageView.setImageURI(resultUri)
+        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+            val resultUri = data?.data
+            if (resultUri != null) {
+                // Update the ImageView with the cropped image
+                imageView.setImageURI(resultUri)
+            }
         } else if (resultCode == UCrop.RESULT_ERROR) {
             val cropError = UCrop.getError(data!!)
             Toast.makeText(this, "Cropping failed: ${cropError?.message}", Toast.LENGTH_SHORT)
                 .show()
         }
-
-
     }
-
 }
-
-
-
-

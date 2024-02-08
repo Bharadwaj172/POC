@@ -59,6 +59,9 @@ android {
 
         implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
         implementation("androidx.databinding:databinding-runtime:8.2.2")
+
+        implementation("com.github.chrisbanes:PhotoView:2.3.0")
+
 //        implementation("com.github.yal antis:crop:2.2.8-native")
 
         implementation("com.github.yalantis:ucrop:2.2.6")
@@ -70,4 +73,9 @@ android {
 
     }
 }
+//dependencies {
+//    implementation("androidx.appcompat:appcompat:1.6.1")
+//    implementation("com.google.android.material:material:1.11.0")
+//    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+//}
 

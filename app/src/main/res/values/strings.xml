@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">POC</string>
+    <string name="app_name">ReNote.AI</string>
     <string name="select_unit">Select Unit</string>
 
     <string name="select_dpi">Select DPI</string>
@@ -24,9 +24,6 @@
 
     <string name="image_size_format">Image size: %1$d x %2$d</string>
     <string name="file_size_format">File size: %1$s</string>
-
-
-
 
 
 </resources>

@@ -49,7 +49,7 @@ class PercentageActivity : AppCompatActivity() {
         })
 
         // Load the original image from the URI passed with the intent
-        val imageUriString = intent.getStringExtra("ImageUri")
+        val imageUriString = intent.getStringExtra("capturedImage")
         imageUriString?.let {
             val imageUri = Uri.parse(it)
             Log.d("PercentageActivity", "Received Image URI: $imageUri")

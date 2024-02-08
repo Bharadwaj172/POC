@@ -27,19 +27,37 @@
 
 
     <!-- ImageView for displaying the resized image -->
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/resizedImageView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scaleType="fitCenter"
-        android:layout_marginTop="16dp"/>
+        android:layout_width="420dp"
+        android:layout_height="500dp"
+        android:layout_below="@id/tvFileSize"
+        android:scaleType="fitCenter"/>
+<!--        android:id="@+id/resizedImageView"-->
+<!--        android:layout_width="420dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:layout_marginTop="10dp"/>-->
 
     <!-- Save Image Button -->
+
     <Button
         android:id="@+id/saveImageButton"
+        android:layout_marginRight="70dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save Image"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="25dp"/>
+
+    <Button
+        android:id="@+id/sendImageButton"
+        android:layout_marginLeft="90dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send"
+        android:layout_marginTop="-45dp"/>
+
+
+
 </LinearLayout>

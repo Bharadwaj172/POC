@@ -66,6 +66,7 @@ class ResizeActivity : AppCompatActivity() {
 
         val imageUri = Uri.parse(intent.getStringExtra("ImageUri"))
 
+        val imageNew = imageUri.toString()
 
 
 
@@ -138,9 +139,9 @@ class ResizeActivity : AppCompatActivity() {
         val buttonPercentage: Button = findViewById(R.id.btnAsPercentage)
         buttonPercentage.setOnClickListener {
             val intent = Intent(this, PercentageActivity::class.java)
+            intent.putExtra("capturedImage",imageNew)
             startActivity(intent)
         }
-
 
     }
 

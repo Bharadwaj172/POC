@@ -1,7 +1,10 @@
 package com.example.poc
 
+
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +24,16 @@ class ImageDisplayActivity : AppCompatActivity() {
 
         // Get the resized image file path from the intent
         val resizedImagePath = intent.getStringExtra("resized_image_path")
+
+        val btnSend: Button = findViewById(R.id.sendImageButton)
+        btnSend.setOnClickListener {
+            val emailIntent = Intent(this, EmailActivity::class.java).apply {
+                // Pass the resized image path to EmailActivity
+                putExtra("resized_image_path", resizedImagePath)
+            }
+            startActivity(emailIntent)
+        }
+
 
         resizedImagePath?.let {
             val imgFile = File(it)

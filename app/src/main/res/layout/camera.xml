@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -29,10 +30,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="420dp"
+        android:layout_height="500dp"
         android:layout_below="@id/tvFileSize"
         android:scaleType="fitCenter"/>
+
+
+
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
@@ -44,24 +48,36 @@
         android:background="#AA000000">
 
         <Button
+            android:layout_marginBottom="80dp"
             android:id="@+id/btnResize"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             android:text="Resize"/>
+
+
+
 
         <Button
             android:id="@+id/btnCrop"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.7"
             android:text="Crop"/>
 
         <Button
             android:id="@+id/btnFlipRotate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.7"
             android:text="Flip Rotate"/>
+
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:text="Send"/>
+
     </LinearLayout>
 </RelativeLayout>

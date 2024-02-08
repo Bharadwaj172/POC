@@ -14,6 +14,7 @@ class CropActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         // No need to set a content view if UCrop is used directly.
 
         val sourceUri = intent.getParcelableExtra<Uri>("sourceUri")
@@ -28,13 +29,17 @@ class CropActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+        if (requestCode == UCrop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
             val resultUri = UCrop.getOutput(data!!)
-            setResult(Activity.RESULT_OK, Intent().setData(resultUri))
+            val returnIntent = Intent()
+            returnIntent.data = resultUri
+            setResult(Activity.RESULT_OK, returnIntent)
         } else if (resultCode == UCrop.RESULT_ERROR) {
             val cropError = UCrop.getError(data!!)
             setResult(Activity.RESULT_CANCELED, Intent().putExtra("error", cropError.toString()))
         }
         finish()
     }
+
+
 }
