@@ -88,11 +88,18 @@ class PercentageActivity : AppCompatActivity() {
     }
 
     private fun saveBitmapToFile(bitmap: Bitmap): String {
-        val file = File(getExternalFilesDir(null), "resized_image_${System.currentTimeMillis()}.png")
-        FileOutputStream(file).use {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+        val filename = "resized_image_${System.currentTimeMillis()}.png"
+        val file = File(getExternalFilesDir(null), filename)
+        return try {
+            FileOutputStream(file).use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+            file.absolutePath
+        } catch (e: Exception) {
+            Log.e("PercentageActivity", "Error saving bitmap to file", e)
+            Toast.makeText(this, "Error saving image: ${e.message}", Toast.LENGTH_LONG).show()
+            ""
         }
-        return file.absolutePath
     }
 
     private fun navigateToImageDisplayActivity(resizedImagePath: String) {

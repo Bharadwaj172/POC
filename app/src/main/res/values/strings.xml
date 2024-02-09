@@ -22,6 +22,19 @@
         <!-- Add other formats as needed -->
     </string-array>
 
+    <string-array name="image_size_optionsss">
+
+        <item>PDF</item>
+        <item>JPG</item>
+        <item>PNG</item>
+        <item>WEBP</item>
+
+
+
+
+        <!-- Add other formats as needed -->
+    </string-array>
+
     <string name="image_size_format">Image size: %1$d x %2$d</string>
     <string name="file_size_format">File size: %1$s</string>
 
