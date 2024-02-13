@@ -109,6 +109,16 @@
             android:visibility="gone"
             android:layout_marginTop="5dp" />
 
+        <Button
+            android:id="@+id/btnri"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="90dp"
+            android:layout_marginRight="90dp"
+            android:text="Resize Image" />
+
         <!-- Export Settings Section -->
 
         <!-- Target File Size Label -->
@@ -117,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="120dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             android:text="Export Settings"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textStyle="bold" />
@@ -151,15 +161,16 @@
             android:entries="@array/image_size_options"
             android:layout_marginTop="-30dp"/>
 
-        <!-- Resize Image Button -->
-        <Button
-            android:id="@+id/btnri"
 
+        <Button
+            android:id="@+id/btnexport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            android:layout_marginLeft="90dp"
+            android:layout_marginRight="90dp"
 
-            android:text="Resize Image" />
+            android:text="Export Image" />
 
     </LinearLayout>
 </ScrollView>

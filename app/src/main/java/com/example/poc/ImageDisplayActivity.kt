@@ -32,6 +32,7 @@ class ImageDisplayActivity : AppCompatActivity() {
     private lateinit var tvResizedImageSize: TextView
     private lateinit var spinner: Spinner
     private var newImagePath: String? = null
+    private var imagePaths = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +71,12 @@ class ImageDisplayActivity : AppCompatActivity() {
             }
         }
 
+
         btnSave.setOnClickListener {
-            newImagePath?.let { path ->
+            // Get the current path of the image displayed
+            val currentImagePath = newImagePath ?: resizedImagePath
+
+            currentImagePath?.let { path ->
                 if (path.endsWith(".pdf")) {
                     // If the file is a PDF, save it using the specific PDF saving method
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -86,6 +91,26 @@ class ImageDisplayActivity : AppCompatActivity() {
                 }
             } ?: Toast.makeText(this, "No file to save", Toast.LENGTH_SHORT).show()
         }
+
+//... existing code ...
+
+
+//        btnSave.setOnClickListener {
+//            newImagePath?.let { path ->
+//                if (path.endsWith(".pdf")) {
+//                    // If the file is a PDF, save it using the specific PDF saving method
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                        savePdfToDownloads(path)
+//                    } else {
+//                        // Handle saving for versions below Android Q if necessary
+//                        // You may need to request WRITE_EXTERNAL_STORAGE permission for this
+//                    }
+//                } else {
+//                    // If the file is an image, save it as usual
+//                    saveImageToGallery(path)
+//                }
+//            } ?: Toast.makeText(this, "No file to save", Toast.LENGTH_SHORT).show()
+//        }
 
 
         // Get the resized image file path from the intent
@@ -163,12 +188,28 @@ class ImageDisplayActivity : AppCompatActivity() {
 
 
     private fun convertToImage(bitmap: Bitmap, filePath: String, format: Bitmap.CompressFormat): String {
-        val newFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "converted_image.${format.name.lowercase()}")
+        // Extract the base name without extension
+        val baseName = File(filePath).nameWithoutExtension
+
+        // Determine the correct extension based on the format
+        val extension = when (format) {
+            Bitmap.CompressFormat.JPEG -> "jpg"
+            Bitmap.CompressFormat.PNG -> "png"
+            Bitmap.CompressFormat.WEBP -> "webp"
+            else -> "jpg"
+        }
+
+        // Create a new file name with the correct extension
+        val newFileName = "$baseName.$extension"
+        val newFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), newFileName)
+
         FileOutputStream(newFile).use { out ->
             bitmap.compress(format, 100, out)
         }
+
         return newFile.absolutePath
     }
+
 
     private fun convertToPdf(bitmap: Bitmap, path: String): String {
         val pdfDir = File(getExternalFilesDir(null), "pdfs")
@@ -246,6 +287,38 @@ class ImageDisplayActivity : AppCompatActivity() {
             Toast.makeText(this, "Error saving PDF", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+//    private fun createPdfFromImages(imagePaths: List<String>, outputFile: File) {
+//        val pdfDocument = PdfDocument()
+//
+//        for (path in imagePaths) {
+//            val bitmap = BitmapFactory.decodeFile(path)
+//            // Assuming you want A4 size pages
+//            val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+//            val page = pdfDocument.startPage(pageInfo)
+//
+//            // Scale the bitmap to fit the PDF page
+//            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, pageInfo.pageWidth, pageInfo.pageHeight, true)
+//            val canvas = page.canvas
+//            canvas.drawBitmap(scaledBitmap, 0f, 0f, null)
+//
+//            if (!scaledBitmap.isRecycled) {
+//                scaledBitmap.recycle()
+//            }
+//
+//            pdfDocument.finishPage(page)
+//        }
+//
+//        try {
+//            pdfDocument.writeTo(FileOutputStream(outputFile))
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//        } finally {
+//            pdfDocument.close()
+//        }
+//    }
+
 
 
 }

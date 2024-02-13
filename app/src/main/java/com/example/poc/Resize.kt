@@ -143,7 +143,57 @@ class ResizeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+
+        val buttonExportImage: Button = findViewById(R.id.btnexport) // Use the actual ID of your button
+        buttonExportImage.setOnClickListener {
+            val targetFileSizeString = editTextTargetFileSize.text.toString()
+            if (targetFileSizeString.isNotEmpty()) {
+                val targetFileSize = targetFileSizeString.toIntOrNull()
+                val unit = spinnerSaveImageAs.selectedItem.toString()
+
+                if (targetFileSize != null) {
+                    // Call a function to apply the target file size to the image
+                    applyTargetFileSize(imageUri, targetFileSize, unit)
+                } else {
+                    Toast.makeText(this, "Please enter a valid target file size.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Please enter a target file size.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+
     }
+
+    private fun applyTargetFileSize(imageUri: Uri, targetFileSize: Int, unit: String) {
+        // Use a coroutine to perform disk IO operations
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Get the bitmap from the image URI
+                val inputStream = contentResolver.openInputStream(imageUri) ?: return@launch
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+
+                // Compress the bitmap to the target file size
+                val compressedFile = compressImageToTargetFileSize(bitmap, targetFileSize, unit)
+
+                withContext(Dispatchers.Main) {
+                    // Create an intent to start the ImageDisplayActivity
+                    val intent = Intent(this@ResizeActivity, ImageDisplayActivity::class.java).apply {
+                        putExtra("resized_image_path", compressedFile.absolutePath)
+                    }
+                    startActivity(intent)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ResizeActivity, "Error applying target file size: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
 
     private fun updateDpiSpinnerAndVisibility(unit: String) {
         val isDpiVisible = unit == "inch" || unit == "Centimeter" || unit == "Millimeter"
@@ -207,17 +257,12 @@ class ResizeActivity : AppCompatActivity() {
 //                val fileSizeString = formatFileSize(resizedFile)
 
                 val targetFileSizeString = editTextTargetFileSize.text.toString()
-                val targetFileSizeInKB = if (targetFileSizeString.isNotEmpty()) {
-                    targetFileSizeString.toIntOrNull() ?: 0 // Default to 0 if input is not a valid integer
+                val selectedUnit = spinnerSaveImageAs.selectedItem.toString()
+                val targetFile: File = if (targetFileSizeString.isNotEmpty()) {
+                    val targetFileSize = targetFileSizeString.toIntOrNull() ?: 0
+                    compressImageToTargetFileSize(resizedBitmap, targetFileSize, selectedUnit)
                 } else {
-                    null
-                }
-
-                val fileToSave: Any = if (targetFileSizeInKB != null) {
-                    // Compress the image to attempt to reach the desired file size
-                    compressImageToTargetFileSize(resizedBitmap, targetFileSizeInKB)
-                } else {
-                    // Save the bitmap without compression if no file size was specified
+                    // If no target file size is specified, save the resized bitmap as is
                     saveBitmapToFile(cacheDir, "resized_image.png", resizedBitmap)
                 }
 
@@ -239,32 +284,58 @@ class ResizeActivity : AppCompatActivity() {
         }
     }
 
+    private fun compressImageToTargetFileSize(bitmap: Bitmap, targetFileSize: Int) {
+
+    }
 
 
+    private fun compressImageToTargetFileSize(bitmap: Bitmap, targetFileSize: Int, unit: String): File {
+        // Convert the target file size to bytes depending on the unit (KB or MB)
+        val targetFileSizeInBytes = when (unit) {
+            "KB" -> targetFileSize * 1024
+            "MB" -> targetFileSize * 1024 * 1024
+            else -> targetFileSize // If no unit is specified, assume bytes
+        }
 
-    private fun compressImageToTargetFileSize(bitmap: Bitmap, targetFileSizeInMB: Int) {
-        val targetFileSizeInBytes = targetFileSizeInMB * 1024 * 1024 // Convert MB to Bytes
-        var low = 0
-        var high = 100
-        var compressedFile: File
+        var quality = 100
+        var compressedFile = File(cacheDir, "compressed_image.jpg")
+        var fileSize = 0
 
-        while (low <= high) {
-            val quality = (low + high) / 2
-            compressedFile = File(cacheDir, "compressed_image.jpg")
+        // Use a binary search to find the quality that makes the file size just less than the target file size
+        var startQuality = 0
+        var endQuality = 100
+        while (startQuality <= endQuality) {
+            quality = (startQuality + endQuality) / 2
+            compressedFile = File(cacheDir, "compressed_image_quality_$quality.jpg")
 
             FileOutputStream(compressedFile).use { out ->
                 bitmap.compress(Bitmap.CompressFormat.JPEG, quality, out)
             }
 
-            if (compressedFile.length() < targetFileSizeInBytes) {
-                low = quality + 1
-            } else if (compressedFile.length() > targetFileSizeInBytes) {
-                high = quality - 1
+            fileSize = compressedFile.length().toInt()
+
+            if (fileSize < targetFileSizeInBytes) {
+                startQuality = quality + 1
+            } else if (fileSize > targetFileSizeInBytes) {
+                endQuality = quality - 1
             } else {
-                break
+                break // The file size is equal to the target size, so exit the loop
             }
         }
+
+        // Check if we should adjust the quality a bit to get closer to the target file size if it's not over
+        if (fileSize > targetFileSizeInBytes) {
+            compressedFile.delete() // Delete the last file as it's over the target size
+            quality--
+            compressedFile = File(cacheDir, "compressed_image_quality_$quality.jpg")
+            FileOutputStream(compressedFile).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, out)
+            }
+        }
+
+        return compressedFile
     }
+
 
 
 
